@@ -6,6 +6,9 @@
  * @type {Array}
  */
 var student_array = [];
+var student_name;
+var student_course;
+var student_grade;
 /**
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
@@ -15,10 +18,10 @@ var student_array = [];
  * addClicked - Event Handler when user clicks the add button
  */
 function addClicked () {
-    var name = $('#studentName').val();
-    var course = $('#course').val();
-    var grade = $('#studentGrade').val();
-    addStudent(name, course, grade);
+    var studentName = student_name.val();
+    var studentCourse = student_course.val();
+    var studentGrade = student_grade.val();
+    addStudent(studentName, studentCourse, studentGrade);
     updateData();
 }
 /**
@@ -32,12 +35,14 @@ function cancelClicked() {
  *
  * @return undefined
  */
-function addStudent(name, course, grade) {
+function addStudent(studentName, studentCourse, studentGrade) {
     var studentObj = {
-        name : name,
-        course : course,
-        grade : grade
+        name : studentName,
+        course : studentCourse,
+        grade : studentGrade,
+        id: 0
     };
+    addToServer(studentObj);
     student_array.push(studentObj);
     // addStudentToDom(studentObj);
 }
@@ -93,12 +98,14 @@ function addStudentToDom(student) {
         var tableName = $('<td>').text(student.name);
         var tableCourse = $('<td>').text(student.course);
         var tableGrade = $('<td>').text(student.grade);
-        var tableOp = $('<button>').addClass('btn btn-danger').html('delete');
+        var tableOp = $('<button>').addClass('btn btn-danger').html('delete').attr('student-id', student.id);
         tableOp.on('click', function () {
             console.log(student_array.indexOf(student));
             student_array.splice(student_array.indexOf(student),1);
             // var delete_row = $(this).parent();
             // delete_row.remove();
+            console.log("id is ", $(this).attr('student-id'));
+            deleteFromServer(student);
             updateData();
         });
         table_row.append(tableName, tableCourse, tableGrade, tableOp);
@@ -110,14 +117,15 @@ function addStudentToDom(student) {
 function reset() {
     student_array = [];
     $('.avgGrade').html('');
-    // var noStudent = $('<td>').text('User Info Unavailable').css('font-size', '30px').attr({colspan: 12});
-    // $('.student-list tbody').append(noStudent);
 }
 
 /**
  * Listen for the document to load and reset the data to the initial state
  */
 $(document).ready(function () {
+    student_name = $('#studentName');
+    student_course = $('#course');
+    student_grade = $('#studentGrade');
     $('#add_btn').click(function () {
         addClicked();
     });
@@ -143,7 +151,7 @@ function getData() {
         method: 'post',
         data: {api_key: 'm7iQL1y1fb'},
         success: function (response) {
-            console.log("successful ajax call",  response.data);
+            console.log("successful ajax call", response.data);
 
             //  short cut for data info in api
             student_array = response.data;
@@ -152,6 +160,38 @@ function getData() {
             updateData();
         },
         //  ajax if there is an error
+        error: function () {
+            console.log('AJAX failed on success');
+        }
+    });
+}
+
+function addToServer(studentObj) {
+    $.ajax({
+        dataType: 'json',
+        url: 'http://s-apis.learningfuze.com/sgt/create',
+        method: 'post',
+        data: {api_key: 'm7iQL1y1fb', name: studentObj.name, course: studentObj.course, grade: studentObj.grade},
+        success: function (result) {
+            console.log("request to add made", result);
+            studentObj.id = result.new_id;
+            console.log(studentObj.id);
+        },
+        error: function () {
+            console.log('AJAX failed on success');
+        }
+    });
+}
+
+function deleteFromServer(student) {
+    $.ajax({
+        dataType: 'json',
+        url: 'http://s-apis.learningfuze.com/sgt/delete',
+        method: 'post',
+        data: {api_key: 'm7iQL1y1fb', student_id:student.id},
+        success: function (result) {
+            console.log("request to delete made", result);
+        },
         error: function () {
             console.log('AJAX failed on success');
         }
