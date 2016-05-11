@@ -97,8 +97,8 @@ function addStudentToDom(student) {
         tableOp.on('click', function () {
             console.log(student_array.indexOf(student));
             student_array.splice(student_array.indexOf(student),1);
-            var delete_row = $(this).parent();
-            delete_row.remove();
+            // var delete_row = $(this).parent();
+            // delete_row.remove();
             updateData();
         });
         table_row.append(tableName, tableCourse, tableGrade, tableOp);
