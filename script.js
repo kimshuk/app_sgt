@@ -39,7 +39,7 @@ function addStudent(name, course, grade) {
         grade : grade
     };
     student_array.push(studentObj);
-    addStudentToDom(studentObj);
+    // addStudentToDom(studentObj);
 }
 /**
  * clearAddStudentForm - clears out the form values based on inputIds variable
@@ -64,16 +64,17 @@ function calculateAverage () {
  * updateData - centralized function to update the average and call student list update
  */
 function updateData() {
+    updateStudentList();
     var avg = calculateAverage();
     $('.avgGrade').html(avg);
-    updateStudentList();
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
 function updateStudentList() {
+    $('tbody > tr').remove();
     for (var i=0; i < student_array.length; i++) {
-        student_array[i]
+        addStudentToDom(student_array[i]);
     }
 }
 /**
@@ -86,7 +87,14 @@ function addStudentToDom(student) {
         var tableName = $('<td>').text(student.name);
         var tableCourse = $('<td>').text(student.course);
         var tableGrade = $('<td>').text(student.grade);
-        var tableOp = $('<button>').addClass('btn btn-danger btn-sm').html('delete');
+        var tableOp = $('<button>').addClass('btn btn-danger').html('delete');
+        tableOp.on('click', function () {
+            console.log(student_array.indexOf(student));
+            student_array.splice(student_array.indexOf(student),1);
+            var delete_row = $(this).parent();
+            delete_row.remove();
+            updateData();
+        });
         table_row.append(tableName, tableCourse, tableGrade, tableOp);
         $('.student-list tbody').append(table_row);
 }
@@ -95,6 +103,9 @@ function addStudentToDom(student) {
  */
 function reset() {
     student_array = [];
+    $('.avgGrade').html('');
+    var noStudent = $('<td>').text('User Info Unavailable').css('font-size', '30px').attr({colspan: 12});
+    $('.student-list tbody').append(noStudent);
 }
 
 /**
@@ -106,5 +117,14 @@ $(document).ready(function () {
     });
     $('#cln_btn').click(function () {
         cancelClicked();
-    })
+    });
+    reset();
 });
+
+/**
+ *  removeStudent - remove student object in the student array
+ *  1. using index of the row of the current button to remove from array
+ *  2. store the index when adding to the DOM into a data attribute
+ */
+
+
