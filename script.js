@@ -82,6 +82,12 @@ function updateStudentList() {
  * into the .student_list tbody
  * @param studentObj
  */
+
+/**
+ *  removeStudent - remove student object in the student array
+ *  1. using index of the row of the current button to remove from array
+ *  2. store the index when adding to the DOM into a data attribute
+ */
 function addStudentToDom(student) {
         var table_row = $('<tr>');
         var tableName = $('<td>').text(student.name);
@@ -104,8 +110,8 @@ function addStudentToDom(student) {
 function reset() {
     student_array = [];
     $('.avgGrade').html('');
-    var noStudent = $('<td>').text('User Info Unavailable').css('font-size', '30px').attr({colspan: 12});
-    $('.student-list tbody').append(noStudent);
+    // var noStudent = $('<td>').text('User Info Unavailable').css('font-size', '30px').attr({colspan: 12});
+    // $('.student-list tbody').append(noStudent);
 }
 
 /**
@@ -118,13 +124,36 @@ $(document).ready(function () {
     $('#cln_btn').click(function () {
         cancelClicked();
     });
+    $('#data_btn').click(function () {
+        getData();
+    });
     reset();
 });
 
 /**
- *  removeStudent - remove student object in the student array
- *  1. using index of the row of the current button to remove from array
- *  2. store the index when adding to the DOM into a data attribute
+ *  getData - Using the LearningFuze SGT API pull records from the DB using an AJAX call
+ *  With the object you get back from the API find the proper data to add to your SGT
  */
 
+function getData() {
+    console.log("request to server made");
+    $.ajax({
+        dataType: 'json',
+        url: 'http://s-apis.learningfuze.com/sgt/get',
+        method: 'post',
+        data: {api_key: 'm7iQL1y1fb'},
+        success: function (response) {
+            console.log("successful ajax call",  response.data);
 
+            //  short cut for data info in api
+            student_array = response.data;
+
+            //  call function to update the student list
+            updateData();
+        },
+        //  ajax if there is an error
+        error: function () {
+            console.log('AJAX failed on success');
+        }
+    });
+}
