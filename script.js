@@ -93,19 +93,18 @@ function updateStudentList() {
  *  1. using index of the row of the current button to remove from array
  *  2. store the index when adding to the DOM into a data attribute
  */
-function addStudentToDom(student) {
+function addStudentToDom(studentObj) {
         var table_row = $('<tr>');
-        var tableName = $('<td>').text(student.name);
-        var tableCourse = $('<td>').text(student.course);
-        var tableGrade = $('<td>').text(student.grade);
-        var tableOp = $('<button>').addClass('btn btn-danger').html('delete').attr('student-id', student.id);
+        var tableName = $('<td>').text(studentObj.name);
+        var tableCourse = $('<td>').text(studentObj.course);
+        var tableGrade = $('<td>').text(studentObj.grade);
+        var tableOp = $('<button>').addClass('btn btn-danger').html('delete').attr('student-id', studentObj.id);
         tableOp.on('click', function () {
-            console.log(student_array.indexOf(student));
-            student_array.splice(student_array.indexOf(student),1);
+            console.log(student_array.indexOf(studentObj));
+            student_array.splice(student_array.indexOf(studentObj),1);
             // var delete_row = $(this).parent();
             // delete_row.remove();
-            console.log("id is ", $(this).attr('student-id'));
-            deleteFromServer(student);
+            deleteFromServer(studentObj);
             updateData();
         });
         table_row.append(tableName, tableCourse, tableGrade, tableOp);
@@ -126,6 +125,8 @@ $(document).ready(function () {
     student_name = $('#studentName');
     student_course = $('#course');
     student_grade = $('#studentGrade');
+
+
     $('#add_btn').click(function () {
         addClicked();
     });
@@ -134,6 +135,26 @@ $(document).ready(function () {
     });
     $('#data_btn').click(function () {
         getData();
+    });
+    $('#studentName').keyup(function(){
+        var dataSent = {
+            name: student_name.val(),
+            course: student_course.val(),
+            grade: student_grade.val()
+        };
+        
+        $.ajax({
+            dataType: 'json',
+            url: 'sgt_get.php',
+            data: dataSent,
+            success: function (response) {
+                console.log(response);
+            },
+            //  ajax if there is an error
+            error: function () {
+                console.log('AJAX failed on success');
+            }
+        });
     });
     reset();
 });
@@ -149,6 +170,7 @@ function getData() {
         dataType: 'json',
         url: 'http://s-apis.learningfuze.com/sgt/get',
         method: 'post',
+        cache: 'false',
         data: {api_key: 'm7iQL1y1fb'},
         success: function (response) {
             console.log("successful ajax call", response.data);
@@ -171,7 +193,13 @@ function addToServer(studentObj) {
         dataType: 'json',
         url: 'http://s-apis.learningfuze.com/sgt/create',
         method: 'post',
-        data: {api_key: 'm7iQL1y1fb', name: studentObj.name, course: studentObj.course, grade: studentObj.grade},
+        cache: 'false',
+        data: {
+            api_key: 'm7iQL1y1fb',
+            name: studentObj.name,
+            course: studentObj.course,
+            grade: studentObj.grade
+        },
         success: function (result) {
             console.log("request to add made", result);
             studentObj.id = result.new_id;
@@ -183,14 +211,16 @@ function addToServer(studentObj) {
     });
 }
 
-function deleteFromServer(student) {
+function deleteFromServer(studentObj) {
     $.ajax({
         dataType: 'json',
         url: 'http://s-apis.learningfuze.com/sgt/delete',
         method: 'post',
-        data: {api_key: 'm7iQL1y1fb', student_id:student.id},
+        cache: 'false',
+        data: {api_key: 'm7iQL1y1fb', student_id:studentObj.id},
         success: function (result) {
             console.log("request to delete made", result);
+            console.log("deleted id is ", studentObj.id);
         },
         error: function () {
             console.log('AJAX failed on success');
