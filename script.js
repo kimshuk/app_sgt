@@ -145,6 +145,7 @@ $(document).ready(function () {
         
         $.ajax({
             dataType: 'json',
+            type: 'post',
             url: 'sgt_get.php',
             data: dataSent,
             success: function (response) {
