@@ -19,32 +19,34 @@
             <small class="pull-right">Grade Average : <span class="avgGrade label label-default"></span></small>
         </h3>
     </div>
-    <div class="student-add-form pull-right col-lg-3">
-        <h4>Add Student</h4>
-        <div class="input-group form-group">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-user"></span>
-            </span>
-            <input type="text" class="form-control" name="studentName" id="studentName" placeholder="Student Name">
+    <form method="post" action="sgt_get.php">
+        <div class="student-add-form pull-right col-lg-3">
+            <h4>Add Student</h4>
+            <div class="input-group form-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-user"></span>
+                </span>
+                <input type="text" class="form-control" name="studentName" id="studentName" placeholder="Student Name">
+            </div>
+            <div class="input-group form-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                </span>
+                <input type="text" class="form-control" name="course" id="course"
+                       placeholder="Student Course">
+            </div>
+            <div class="input-group form-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-education"></span>
+                </span>
+                <input type="text" class="form-control" name="studentGrade" id="studentGrade"
+                       placeholder="Student Grade">
+            </div>
+            <button id="add_btn" type="button" class="btn btn-success btn-sm">Add</button>
+            <button id="cln_btn" type="button" class="btn btn-default btn-sm">Cancel</button>
+            <button id="data_btn" type="button" class="btn btn-info btn-sm">Get data From Server</button>
         </div>
-        <div class="input-group form-group">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-list-alt"></span>
-            </span>
-            <input type="text" class="form-control" name="course" id="course"
-                   placeholder="Student Course">
-        </div>
-        <div class="input-group form-group">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-education"></span>
-            </span>
-            <input type="text" class="form-control" name="studentGrade" id="studentGrade"
-                   placeholder="Student Grade">
-        </div>
-        <button id="add_btn" type="button" class="btn btn-success btn-sm">Add</button>
-        <button id="cln_btn" type="button" class="btn btn-default btn-sm">Cancel</button>
-        <button id="data_btn" type="button" class="btn btn-info btn-sm">Get data From Server</button>
-    </div>
+    </form>
     <div class="student-list-container container-fluid col-lg-9">
         <table class="student-list table">
             <thead>
@@ -60,5 +62,7 @@
         </table>
     </div>
 </div>
+
+<div id="show"></div>
 </body>
 </html>

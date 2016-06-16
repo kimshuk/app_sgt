@@ -8,9 +8,7 @@
 
 require_once('mysql_connect.php');
 
-mysqli_select_db("sgt_db") or die("couldn't connect to database");
-
-$query = "SELECT `class`.`name`, `student`.`name`, `grade`.`grade` FROM `grade`
+$query = "SELECT `student`.`student_name`, `class`.`class_name`, `grade`.`score` FROM `grade`
           JOIN `student`
           ON `student`.`id` = `grade`.`student_id`
           JOIN `class`
@@ -20,8 +18,10 @@ $result = mysqli_query($conn, $query);
 
 if(mysqli_num_rows($result) > 0){
     while($row = mysqli_fetch_assoc($result)){
-        $new_id = mysqli_insert_id($conn);
-        $output['success'] = true;
-        $output['new_id'] = $new_id;
+        $output[] = $row;
     }
+    $response = json_encode($output);
+    print_r($response);
 }
+
+?>
