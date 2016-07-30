@@ -8,7 +8,7 @@
 
 require_once('mysql_connect.php');
 
-$query = "SELECT `student`.`student_name`, `class`.`class_name`, `grade`.`score` FROM `grade`
+$query = "SELECT `student`.`student_name`, `class`.`class_name`, `grade`.`score`, `grade`.`id` FROM `grade`
           JOIN `student`
           ON `student`.`id` = `grade`.`student_id`
           JOIN `class`
@@ -18,10 +18,9 @@ $result = mysqli_query($conn, $query);
 
 if(mysqli_num_rows($result) > 0){
     while($row = mysqli_fetch_assoc($result)){
-        $output = $row;
+        $output[] = $row;
     }
     $response = json_encode($output);
     print_r($response);
 }
-
 ?>

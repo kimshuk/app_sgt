@@ -19,7 +19,7 @@
             <small class="pull-right">Grade Average : <span class="avgGrade label label-default"></span></small>
         </h3>
     </div>
-    <form method="post" action="sgt_get.php">
+    <form method="post">
         <div class="student-add-form pull-right col-lg-3">
             <h4>Add Student</h4>
             <div class="input-group form-group">
@@ -42,9 +42,10 @@
                 <input type="text" class="form-control" name="studentGrade" id="studentGrade"
                        placeholder="Student Grade">
             </div>
-            <button id="add_btn" type="button" class="btn btn-success btn-sm">Add</button>
+            <button id="add_btn" type="submit" class="btn btn-success btn-sm">Add</button>
             <button id="cln_btn" type="button" class="btn btn-default btn-sm">Cancel</button>
             <button id="data_btn" type="button" class="btn btn-info btn-sm">Get data From Server</button>
+            <div id="show"></div>
         </div>
     </form>
     <div class="student-list-container container-fluid col-lg-9">
@@ -63,6 +64,5 @@
     </div>
 </div>
 
-<div id="show"></div>
 </body>
 </html>

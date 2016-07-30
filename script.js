@@ -205,14 +205,10 @@ function addToServer(studentObj) {
     //         console.log('AJAX failed on success');
     //     }
     // });
-    student_name = $('#studentName').val();
-    student_course = $('#course').val();
-    student_grade = $('#studentGrade').val();
-
     var dataSent = {
-        student_name: student_name,
-        class_name: student_course,
-        score: student_grade
+        student_name: studentObj.name,
+        class_name: studentObj.course,
+        score: studentObj.grade
     };
 
 
@@ -223,6 +219,11 @@ function addToServer(studentObj) {
         data: dataSent,
         success: function (response) {
             console.log(response);
+            if (response.success) {
+                $('#show').html(response.message);
+            } else {
+                $('#show').html("<p style='color: red'>" + response.message + "</p>");
+            }
         },
         //  ajax if there is an error
         error: function () {
