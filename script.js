@@ -88,17 +88,12 @@ function updateStudentList() {
  * @param studentObj
  */
 
-/**
- *  removeStudent - remove student object in the student array
- *  1. using index of the row of the current button to remove from array
- *  2. store the index when adding to the DOM into a data attribute
- */
 function addStudentToDom(studentObj) {
         var table_row = $('<tr>');
         var tableName = $('<td>').text(studentObj.student_name);
         var tableCourse = $('<td>').text(studentObj.class_name);
         var tableGrade = $('<td>').text(studentObj.score);
-        var tableOp = $('<button>').addClass('btn btn-danger').html('delete').attr('student-id', studentObj.id);
+        var tableOp = $('<button>').addClass('btn btn-danger').html('delete').attr({'student-id': studentObj.id, type:'submit'});
         tableOp.on('click', function () {
             console.log(student_array.indexOf(studentObj));
             student_array.splice(student_array.indexOf(studentObj),1);
@@ -169,7 +164,6 @@ function getData() {
     // });
     $.ajax({
         dataType: 'json',
-        type: 'post',
         url: 'sgt_get.php',
         success: function (response) {
             console.log(response);
@@ -232,16 +226,37 @@ function addToServer(studentObj) {
     });
 }
 
+/**
+ *  removeStudent - remove student object in the student array
+ *  1. using index of the row of the current button to remove from array
+ *  2. store the index when adding to the DOM into a data attribute
+ */
 function deleteFromServer(studentObj) {
+    // $.ajax({
+    //     dataType: 'json',
+    //     url: 'http://s-apis.learningfuze.com/sgt/delete',
+    //     method: 'post',
+    //     cache: 'false',
+    //     data: {api_key: 'm7iQL1y1fb', student_id: studentObj.id},
+    //     success: function (result) {
+    //         console.log("request to delete made", result);
+    //         console.log("deleted id is ", studentObj.id);
+    //     },
+    //     error: function () {
+    //         console.log('AJAX failed on success');
+    //     }
+    // });
+    console.log("delete from server requested");
+    var student_id = studentObj.id;
+
     $.ajax({
         dataType: 'json',
-        url: 'http://s-apis.learningfuze.com/sgt/delete',
+        url: 'sgt_delete.php',
         method: 'post',
-        cache: 'false',
-        data: {api_key: 'm7iQL1y1fb', student_id: studentObj.id},
-        success: function (result) {
-            console.log("request to delete made", result);
-            console.log("deleted id is ", studentObj.id);
+        data: student_id,
+        success: function (response) {
+            console.log("request to delete made", response);
+            console.log("deleted id is ", student_id);
         },
         error: function () {
             console.log('AJAX failed on success');
