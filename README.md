@@ -11,4 +11,4 @@ This is an application that performs CRUD (create, read, update, and delete) ope
 - [ ] **Sorting** - Sort students by name / grade / course
 - [ ] **Auto-Complete** - Course entry auto complete
 
-###[LIVE DEMO]()
+###[LIVE DEMO](http://jeesookim.com/app_sgt/)
