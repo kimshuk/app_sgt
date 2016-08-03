@@ -44,7 +44,6 @@ function addStudent(studentName, studentCourse, studentGrade) {
     };
     addToServer(studentObj);
     student_array.push(studentObj);
-    // addStudentToDom(studentObj);
 }
 /**
  * clearAddStudentForm - clears out the form values based on inputIds variable
@@ -90,9 +89,9 @@ function updateStudentList() {
 
 function addStudentToDom(studentObj) {
         var table_row = $('<tr>');
-        var tableName = $('<td>').text(studentObj.student_name);
-        var tableCourse = $('<td>').text(studentObj.class_name);
-        var tableGrade = $('<td>').text(studentObj.score);
+        var tableName = $('<td>').text(studentObj.name);
+        var tableCourse = $('<td>').text(studentObj.course);
+        var tableGrade = $('<td>').text(studentObj.grade);
         var tableOp = $('<button>').addClass('btn btn-danger').html('delete').attr({'student-id': studentObj.id, type:'submit'});
         tableOp.on('click', function () {
             console.log(student_array.indexOf(studentObj));
@@ -142,33 +141,19 @@ $(document).ready(function () {
 
 function getData() {
     console.log("request to server made");
-    // $.ajax({
-    //     dataType: 'json',
-    //     url: 'http://s-apis.learningfuze.com/sgt/get',
-    //     method: 'post',
-    //     cache: 'false',
-    //     data: {api_key: 'm7iQL1y1fb'},
-    //     success: function (response) {
-    //         console.log("successful ajax call", response.data);
-    //
-    //         //  short cut for data info in api
-    //         student_array = response.data;
-    //
-    //         //  call function to update the student list
-    //         updateData();
-    //     },
-    //     //  ajax if there is an error
-    //     error: function () {
-    //         console.log('AJAX failed on success');
-    //     }
-    // });
     $.ajax({
         dataType: 'json',
         url: 'sgt_get.php',
         success: function (response) {
             console.log(response);
             for (x in response) {
-                addStudentToDom(response[x]);
+                var responseObj = {
+                    name : response[x].student_name,
+                    course : response[x].class_name,
+                    grade : response[x].score,
+                    id: response[x].id
+                };
+                addStudentToDom(responseObj);
             }
         },
         //  ajax if there is an error
@@ -179,33 +164,14 @@ function getData() {
 }
 
 function addToServer(studentObj) {
-    // $.ajax({
-    //     dataType: 'json',
-    //     url: 'http://s-apis.learningfuze.com/sgt/create',
-    //     method: 'post',
-    //     cache: 'false',
-    //     data: {
-    //         api_key: 'm7iQL1y1fb',
-    //         name: studentObj.name,
-    //         course: studentObj.course,
-    //         grade: studentObj.grade
-    //     },
-    //     success: function (result) {
-    //         console.log("request to add made", result);
-    //         studentObj.id = result.new_id;
-    //         console.log(studentObj.id);
-    //     },
-    //     error: function () {
-    //         console.log('AJAX failed on success');
-    //     }
-    // });
+
     var dataSent = {
         student_name: studentObj.name,
         class_name: studentObj.course,
         score: studentObj.grade
     };
 
-
+    console.log(dataSent);
     $.ajax({
         dataType: 'json',
         type: 'post',
@@ -214,12 +180,12 @@ function addToServer(studentObj) {
         success: function (response) {
             console.log(response);
             if (response.success) {
-                $('#show').html(response.message);
+                $('#show').text(response.message);
             } else {
                 $('#show').html("<p style='color: red'>" + response.message + "</p>");
             }
-        },
         //  ajax if there is an error
+        },
         error: function () {
             console.log('AJAX failed on success');
         }
@@ -232,31 +198,27 @@ function addToServer(studentObj) {
  *  2. store the index when adding to the DOM into a data attribute
  */
 function deleteFromServer(studentObj) {
-    // $.ajax({
-    //     dataType: 'json',
-    //     url: 'http://s-apis.learningfuze.com/sgt/delete',
-    //     method: 'post',
-    //     cache: 'false',
-    //     data: {api_key: 'm7iQL1y1fb', student_id: studentObj.id},
-    //     success: function (result) {
-    //         console.log("request to delete made", result);
-    //         console.log("deleted id is ", studentObj.id);
-    //     },
-    //     error: function () {
-    //         console.log('AJAX failed on success');
-    //     }
-    // });
     console.log("delete from server requested");
-    var student_id = studentObj.id;
+    var deleteData = {
+        student_name: studentObj.name,
+        score: studentObj.grade,
+        student_id: studentObj.id
+    };
+
+    console.log(studentObj.id);
 
     $.ajax({
         dataType: 'json',
         url: 'sgt_delete.php',
         method: 'post',
-        data: student_id,
+        data: deleteData,
         success: function (response) {
-            console.log("request to delete made", response);
-            console.log("deleted id is ", student_id);
+            if (response.success) {
+                $('#show').text(response.message);
+                getData();
+            } else {
+                $('#show').html("<p style='color: red'>" + response.message + "</p>");
+            }
         },
         error: function () {
             console.log('AJAX failed on success');
