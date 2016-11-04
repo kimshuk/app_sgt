@@ -2,7 +2,9 @@
 
 ### Overview
 
-This is an application that performs CRUD (create, read, update, and delete) operations which essentially takes input values and applies them to objects and updates the DOM with a visual of those objects stored. The data is prepopulated from my personal database via MySQL query. This application was styled solely with Boostrap.
+This is an application that performs CRUD (create, read, update, and delete) operations which essentially takes input values and applies them to objects and updates the DOM with a visual of those objects stored.
+
+I used: HTML, BOOTSTRAP, JAVASCRIPT, jQUERY, PHP, MYSQL. 
 
 ### Upcoming projected improvements
 - [ ] **Duplicate Check** - Checks student name and class with database for duplicated info and rejects it.
